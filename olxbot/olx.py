@@ -110,6 +110,10 @@ async def start_olx_polling(bot, db, loop):
     while True:
         start = datetime.now()
         filters = await db.filters.find({}).to_list(None)
+        if not filters:
+            print('Waiting for filters...')
+            await asyncio.sleep(5)
+            continue
         offers = [o['_id'] for o in await db.offers.find({}, projection=['_id']).to_list(None)]
         new_offers = []
         total_elements = []

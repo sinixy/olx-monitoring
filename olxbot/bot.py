@@ -5,7 +5,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 from bson.objectid import ObjectId
 
-from config import BOT_TOKEN, RECIEVER_ID, TIME_PERIOD
+from config import BOT_TOKEN, RECIEVER_ID
 from .db import db
 from .keyboards import *
 from .olx import get_query_params
