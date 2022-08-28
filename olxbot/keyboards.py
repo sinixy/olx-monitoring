@@ -2,31 +2,35 @@ from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, KeyboardBut
 
 
 def filters_list_kb(filters_list, page=0, count=3):
-	res = InlineKeyboardMarkup()
-	start = page * count
-	end = start + count
-	filters = filters_list[start:end]
-	for f in filters:
-		id = f[0]
-		title = f[1]
-		res.add(InlineKeyboardButton(title, callback_data='[f]' + str(id)))
-	if len(filters_list) > count:
-		control_buttons = []
-		if page > 0:
-			control_buttons.append(InlineKeyboardButton('⬅️', callback_data='prev'))
-		if end < len(filters_list):
-			control_buttons.append(InlineKeyboardButton('➡️', callback_data='next'))
-		res.row(*control_buttons)
-	res.add(InlineKeyboardButton('Вийти', callback_data='quit_filters'))
-	return res
+    res = InlineKeyboardMarkup()
+    start = page * count
+    end = start + count
+    filters = filters_list[start:end]
+    for f in filters:
+        id = f['_id']
+        title = f['title']
+        res.add( InlineKeyboardButton(title, callback_data='[f]' + str(id)) )
+    if len(filters_list) > count:
+        control_buttons = []
+        if page > 0:
+            control_buttons.append(InlineKeyboardButton('⬅️', callback_data='prev'))
+        if end < len(filters_list):
+            control_buttons.append(InlineKeyboardButton('➡️', callback_data='next'))
+        res.row(*control_buttons)
+    res.add(InlineKeyboardButton('Вийти', callback_data='quit_filters'))
+    return res
 
+def offer_kb(url):
+    res = InlineKeyboardMarkup()
+    res.add(InlineKeyboardButton('↗️ Перейти на сайт', url=url))
+    return res
 
 admin_kb = ReplyKeyboardMarkup(keyboard=
-	[
-		[KeyboardButton('Створення фільтрів➕')],
-		[KeyboardButton('Редагування фільтрів✏️')]
+    [
+        [KeyboardButton('Створення фільтрів➕')],
+        [KeyboardButton('Редагування фільтрів✏️')]
 
-	]
+    ]
 )
 
 edit_filter_kb = InlineKeyboardMarkup()
@@ -43,6 +47,6 @@ create_filter_kb.add(InlineKeyboardButton('Скасувати', callback_data='c
 
 confirmation_kb = InlineKeyboardMarkup()
 confirmation_kb.row(
-	InlineKeyboardButton('Так', callback_data='y'),
-	InlineKeyboardButton('Ні', callback_data='n')
+    InlineKeyboardButton('Так', callback_data='y'),
+    InlineKeyboardButton('Ні', callback_data='n')
 )
