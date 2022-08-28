@@ -74,7 +74,7 @@ async def new_filter_create(msg: types.Message, state: FSMContext):
     query_params = await get_query_params(url)
     if query_params:
         await db.filters.insert_one({'title': title, 'url': url, 'params': query_params})
-        await msg.reply(f'Фильтр {title} створено!', reply=False)
+        await msg.reply(f'фільтр {title} створено!', reply=False)
         await state.finish()
     else:
         await msg.reply('⚠️ Не можу визначити параметри фільтру! Перевірте коректність посилання.', reply=False)
@@ -89,7 +89,7 @@ async def new_filter_cancel(callback_query: types.CallbackQuery, state: FSMConte
 async def filters_list(msg: types.Message, state: FSMContext):
     filters = await db.filters.find({}).to_list(None)
     await msg.reply(
-        f'Всего фильтрів у базі: {len(filters)}.\n\nВиберіть фильтр, щоб перейти до його редагування.',
+        f'Всего фільтрів у базі: {len(filters)}.\n\nВиберіть фільтр, щоб перейти до його редагування.',
         reply=False,
         reply_markup=filters_list_kb(filters)
     )
@@ -135,7 +135,7 @@ async def filter_edit_link(callback_query: types.CallbackQuery, state: FSMContex
 @dp.callback_query_handler(lambda c: c.data == 'delete', state=Filters_Info.Info)
 async def filter_confirm_deletion(callback_query: types.CallbackQuery, state: FSMContext):
     await callback_query.message.delete()
-    await bot.send_message(callback_query.from_user.id, 'Видалити фильтр?', reply_markup=confirmation_kb)
+    await bot.send_message(callback_query.from_user.id, 'Видалити фільтр?', reply_markup=confirmation_kb)
     await Filters_Edit.Delete.set()
 
 @dp.callback_query_handler(lambda c: c.data == 'to_list', state=Filters_Info.Info)
@@ -145,7 +145,7 @@ async def backto_filter_list(callback_query: types.CallbackQuery, state: FSMCont
     filters = await db.filters.find({}).to_list(None)
     await bot.send_message(
         callback_query.from_user.id,
-        f'Всего фильтрів у базі: {len(filters)}.\n\nВиберіть фильтр, щоб перейти до його редагування.',
+        f'Всего фільтрів у базі: {len(filters)}.\n\nВиберіть фільтр, щоб перейти до його редагування.',
         reply_markup=filters_list_kb(filters, page=page)
     )
     await callback_query.message.delete()
@@ -166,7 +166,7 @@ async def filter_delete(callback_query: types.CallbackQuery, state: FSMContext):
     if callback_query.data == 'y':
         await callback_query.message.delete()
         await db.filters.delete_one({'_id': ObjectId(filter_id)})
-        await bot.send_message(callback_query.from_user.id, 'Фильтр видалено!')
+        await bot.send_message(callback_query.from_user.id, 'фільтр видалено!')
         await state.finish()
     elif callback_query.data == 'n':
         await callback_query.message.delete()
