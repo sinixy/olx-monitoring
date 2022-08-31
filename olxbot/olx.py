@@ -1,5 +1,6 @@
-import aiohttp
 import asyncio
+import aiohttp
+from aiohttp.client_exceptions import ClientOSError
 from aiogram import types
 from datetime import datetime
 from pymongo import InsertOne
@@ -118,7 +119,11 @@ async def start_olx_polling(bot, db, loop):
         new_offers = []
         total_elements = []
         for f in filters:
-            resp = await get_offers(**f['params'])
+            try:
+                resp = await get_offers(**f['params'])
+            except ClientOSError:
+                await asyncio.sleep(10)
+                break
             total_elements.append(resp.get('metadata', {}).get('total_elements', None))
             filtered_offers = get_filtered_offers(resp.get('data', []), offers, f['title'])
             if not filtered_offers:
@@ -128,7 +133,11 @@ async def start_olx_polling(bot, db, loop):
 
             next_page = resp.get('links', {}).get('next', {}).get('href')
             while next_page:
-                resp = await get_offers(next_page)
+                try:
+                    resp = await get_offers(next_page)
+                except ClientOSError:
+                    await asyncio.sleep(10)
+                    break
                 filtered_offers = get_filtered_offers(resp.get('data', []), offers, f['title'])
                 if not filtered_offers:
                     break
