@@ -1,6 +1,6 @@
 import asyncio
 import aiohttp
-from aiohttp.client_exceptions import ClientOSError
+from aiohttp.client_exceptions import ClientOSError, ClientPayloadError
 from aiogram import types
 from datetime import datetime
 from pymongo import InsertOne
@@ -121,7 +121,7 @@ async def start_olx_polling(bot, db, loop):
         for f in filters:
             try:
                 resp = await get_offers(**f['params'])
-            except ClientOSError:
+            except (ClientOSError, ClientPayloadError):
                 await asyncio.sleep(10)
                 break
             total_elements.append(resp.get('metadata', {}).get('total_elements', None))
