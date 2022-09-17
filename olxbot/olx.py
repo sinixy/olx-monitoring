@@ -86,6 +86,7 @@ def get_filtered_offers(new_offers, old_offers_id, filter_name):
                     tmp[k] = v
             tmp['filter'] = filter_name
             res.append(tmp)
+            old_offers_id.append(o['id'])
         return res
 
 async def send_reports(offers, bot):
@@ -129,7 +130,6 @@ async def start_olx_polling(bot, db, loop):
             if not filtered_offers:
                 continue
             new_offers.extend(filtered_offers)
-            offers.extend([fo['_id'] for fo in filtered_offers])
 
             next_page = resp.get('links', {}).get('next', {}).get('href')
             while next_page:
@@ -142,7 +142,6 @@ async def start_olx_polling(bot, db, loop):
                 if not filtered_offers:
                     break
                 new_offers.extend(filtered_offers)
-                offers.extend([fo['_id'] for fo in filtered_offers])
                 next_page = resp.get('links', {}).get('next', {}).get('href')
 
         if new_offers:
