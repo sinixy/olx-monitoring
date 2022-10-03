@@ -1,4 +1,7 @@
 __pycache__
 .env
 *.db
+*.ppk
+*.pem
 test*
+connect.py
